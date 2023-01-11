@@ -10,6 +10,6 @@ public class CustomerRegistrationService {
     private final CustomerRepository customerRepository;
 
     public void registerNewCustomer(CustomerRegistrationRequest request){
-        customerRepository.
+
     }
 }
