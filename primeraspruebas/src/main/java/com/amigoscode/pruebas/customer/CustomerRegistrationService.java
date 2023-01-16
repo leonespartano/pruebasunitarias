@@ -29,7 +29,7 @@ public class CustomerRegistrationService {
             throw new IllegalStateException(MessageFormat.format("The phoneNumber [%s] can the same from another user", phoneNumber));
         }
 
-        
+       
 
         customerRepository.save(request.getCustomer());
 
