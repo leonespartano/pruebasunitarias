@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 
 import java.text.MessageFormat;
 import java.util.Optional;
+import java.util.UUID;
 
 @AllArgsConstructor
 @Service
@@ -29,7 +30,9 @@ public class CustomerRegistrationService {
             throw new IllegalStateException(MessageFormat.format("The phoneNumber [%s] can the same from another user", phoneNumber));
         }
 
-       
+       if(request.getCustomer().getId() == null){
+           request.getCustomer().setId(UUID.randomUUID());
+       }
 
         customerRepository.save(request.getCustomer());
 
