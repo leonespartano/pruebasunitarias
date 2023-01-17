@@ -27,7 +27,7 @@ public class CustomerRegistrationService {
             if(customerOptional.get() == request.getCustomer()){
                 return;
             }
-            throw new IllegalStateException(MessageFormat.format("The phoneNumber [%s] can the same from another user", phoneNumber));
+            throw new IllegalStateException(String.format("The phoneNumber [%s] can the same from another user", phoneNumber));
         }
 
        if(request.getCustomer().getId() == null){
