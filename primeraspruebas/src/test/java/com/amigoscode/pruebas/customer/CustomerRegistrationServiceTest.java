@@ -1,6 +1,5 @@
 package com.amigoscode.pruebas.customer;
 
-import org.hibernate.mapping.Any;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
@@ -12,14 +11,16 @@ import java.util.Optional;
 import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
+
+
 
 class CustomerRegistrationServiceTest {
 
     @Mock
     private CustomerRepository customerRepository;
+
 
     @Captor
     ArgumentCaptor<Customer> customerArgumentCaptor;
@@ -35,6 +36,7 @@ class CustomerRegistrationServiceTest {
 
     @Test
     void itShouldSaveNewCustomer() {
+
         //Given a phone number and a customer
         String phoneNumber = "0000";
         Customer customer = new Customer(UUID.randomUUID(), "Arturo", phoneNumber);
