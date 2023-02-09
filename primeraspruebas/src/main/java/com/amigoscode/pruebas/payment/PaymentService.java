@@ -36,7 +36,7 @@ public class PaymentService {
                 .anyMatch(c -> c.equals(paymentRequest.getPayment().getCurrency()));
 
         if (!isCurrencySupported) {
-            String message = String.format("Currency[%s] not supported", paymentRequest.getPayment().getCurrency());
+            String message = String.format("Currency [%s] not supported", paymentRequest.getPayment().getCurrency());
             throw new IllegalStateException(message);
         }
 
