@@ -1,5 +1,6 @@
 package com.amigoscode.pruebas.customer;
 
+import com.amigoscode.pruebas.utils.PhoneNumberValidator;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
@@ -23,6 +24,9 @@ class CustomerRegistrationServiceTest {
     @Mock
     private CustomerRepository customerRepository;
 
+    @Mock
+    private PhoneNumberValidator phoneNumberValidator;
+
     @Captor
     private ArgumentCaptor<Customer> customerArgumentCaptor;
 
@@ -32,7 +36,7 @@ class CustomerRegistrationServiceTest {
     void setUp() {
 //        MockitoAnnotations.openMocks(this);
         MockitoAnnotations.initMocks(this);
-        underTest = new CustomerRegistrationService(customerRepository);
+        underTest = new CustomerRegistrationService(phoneNumberValidator, customerRepository);
     }
 
     @Test
@@ -46,6 +50,9 @@ class CustomerRegistrationServiceTest {
 
         given(customerRepository.selectCustomerByPhoneNumber(phoneNumber))
                 .willReturn(Optional.empty());
+
+        // Valid phone number
+        given(phoneNumberValidator.test(phoneNumber)).willReturn(true);
         //When
         underTest.registerNewCustomer(request);
         //Then
@@ -56,9 +63,30 @@ class CustomerRegistrationServiceTest {
     }
 
     @Test
-    void itShouldSaveNewCustomerWhenIdIsNull() {
+    void itShouldNotSaveNewCustomerWhenPhoneNumberIsInvalid() {
         //Given a phone number and a customer
         String phoneNumber = "000099";
+        Customer customer = new Customer(UUID.randomUUID(), "Maryam", phoneNumber);
+
+        // ... a request
+        CustomerRegistrationRequest request = new CustomerRegistrationRequest(customer);
+
+        // Invalid phone number
+        given(phoneNumberValidator.test(phoneNumber)).willReturn(false);
+        //When
+        //Then
+        assertThatThrownBy(() -> underTest.registerNewCustomer(request))
+                        .isInstanceOf(IllegalStateException.class)
+                        .hasMessageContaining("Phone Number "+ phoneNumber +" is not valid.");
+
+        then(customerRepository).shouldHaveNoInteractions();
+
+    }
+
+    @Test
+    void itShouldSaveNewCustomerWhenIdIsNull() {
+        //Given a phone number and a customer
+        String phoneNumber = " phoneNumber ++";
         Customer customer = new Customer(null, "Maryam", phoneNumber);
 
         // ... a request
@@ -66,6 +94,9 @@ class CustomerRegistrationServiceTest {
 
         given(customerRepository.selectCustomerByPhoneNumber(phoneNumber))
                 .willReturn(Optional.empty());
+
+        // Valid phone number
+        given(phoneNumberValidator.test(phoneNumber)).willReturn(true);
         //When
         underTest.registerNewCustomer(request);
         //Then
@@ -88,6 +119,9 @@ class CustomerRegistrationServiceTest {
         // ... an existing customer is returned
         given(customerRepository.selectCustomerByPhoneNumber(phoneNumber))
                 .willReturn(Optional.of(customer));
+
+        // Valid phone number
+        given(phoneNumberValidator.test(phoneNumber)).willReturn(true);
         //When
         underTest.registerNewCustomer(request);
 
@@ -110,6 +144,9 @@ class CustomerRegistrationServiceTest {
         // ... an existing customer is returned
         given(customerRepository.selectCustomerByPhoneNumber(phoneNumber))
                 .willReturn(Optional.of(customerTwo));
+
+        // Valid phone number
+        given(phoneNumberValidator.test(phoneNumber)).willReturn(true);
         //When
         //Then
         assertThatThrownBy(()->underTest.registerNewCustomer(request))

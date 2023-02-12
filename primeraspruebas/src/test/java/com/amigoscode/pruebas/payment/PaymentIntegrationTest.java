@@ -35,7 +35,7 @@ public class PaymentIntegrationTest {
     void itShouldCreatePaymentSuccessfully() throws Exception {
         // Given a customer
         UUID customerId = UUID.randomUUID();
-        Customer customer = new Customer(customerId, "James", "0000000");
+        Customer customer = new Customer(customerId, "James", "+447000000000");
 
         // Perform registration for a new customer
         CustomerRegistrationRequest request = new CustomerRegistrationRequest(customer);

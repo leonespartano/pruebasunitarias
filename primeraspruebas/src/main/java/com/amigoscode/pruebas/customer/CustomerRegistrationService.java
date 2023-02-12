@@ -1,5 +1,6 @@
 package com.amigoscode.pruebas.customer;
 
+import com.amigoscode.pruebas.utils.PhoneNumberValidator;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -10,6 +11,7 @@ import java.util.UUID;
 @Service
 public class CustomerRegistrationService {
 
+    private final PhoneNumberValidator phoneNumberValidator;
     private final CustomerRepository customerRepository;
 
     public void registerNewCustomer(CustomerRegistrationRequest request){
@@ -19,6 +21,12 @@ public class CustomerRegistrationService {
         // - 2.2 throw an exception
         // 3. Save customer
         String phoneNumber = request.getCustomer().getPhoneNumber();
+
+        // Validate that phone number is valid
+        if(!phoneNumberValidator.test(phoneNumber)){
+            throw new IllegalStateException("Phone Number " + phoneNumber + " is not valid.");
+        }
+
         Optional<Customer> customerOptional = customerRepository.selectCustomerByPhoneNumber(phoneNumber);
         if (customerOptional.isPresent()){
             Customer customer = customerOptional.get();
